@@ -52,11 +52,35 @@ spec:
           {{- end }}
         - name: busybox-sidecar-1
           image: busybox:latest
-          command: [ "sh", "-c", "while true; do echo 'Sidecar 1 running'; sleep 6000; done" ]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "Pod name: $POD_NAME - Sidecar 1 running";
+                sleep 6000;
+              done
           imagePullPolicy: IfNotPresent
         - name: busybox-sidecar-2
           image: busybox:latest
-          command: [ "sh", "-c", "while true; do echo 'Sidecar 2 running'; sleep 6000; done" ]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "Pod name: $POD_NAME - Sidecar 2 running";
+                sleep 6000;
+              done
           imagePullPolicy: IfNotPresent
       {{- with .Values.volumes }}
       volumes:
